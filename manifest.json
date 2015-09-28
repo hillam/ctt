@@ -1,0 +1,19 @@
+{
+	"name": "Time Tracker",
+	"version": "1.0",
+
+	"background": {
+		"scripts": ["js/background.js", "lib/purl.js"]
+	},
+
+	"browser_action": {
+		"default_icon": "icon.png",
+		"default_popup": "popup.html"
+	},
+
+	"permissions": [
+		"tabs"
+	],
+
+	"manifest_version": 2
+}

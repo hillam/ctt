@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			html, body{
+				white-space: nowrap;
+			}
+			#site, #time{
+				font-weight: bold;
+			}
+			#time{
+				text-decoration: underline;
+				padding-left: 10px;
+				font-size: 150%;
+			}
+		</style>
+	</head>
+	<body>
+		<p id="site"></p>
+		<form>
+			Time in the past 
+			<select>
+				<option>day</option>
+				<option>week</option>
+				<option>month</option>
+				<option>year</option>
+			</select> :
+			<span id="time"></span>
+		</form>
+		<form>
+			<b>Nofication</b> after <input type="text" size="1"> hours per 
+			<select>
+				<option>day</option>
+				<option>week</option>
+				<option>month</option>
+				<option>year</option>
+			</select>
+			<input type="submit">
+		</form>
+		<p><a href="#">Manage Notifications</a></p>
+		<p><a href="#">Time Tracker Website</a></p>
+		<p><a href="#">Permalink to your stats for this site</a></p>
+
+		<script src="lib/jquery-2.1.4.min.js"></script>
+		<script src="lib/purl.js"></script>
+		<script src="js/popup.js"></script>
+		
+	</body>
+</html>

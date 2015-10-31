@@ -22,7 +22,7 @@ something like this:
 params.require(:sites).each do |host,time|
     unless current_user.nil?
         # create an entry for a site entry for a given host/time pair
-        current_user.sites.find_by(host: host).entries.create(time: v)
+        current_user.sites.find_by(host: host).entries.create(time: time)
     end
 end
 ```

@@ -62,8 +62,8 @@ function push_sites(){
 	var request = $.post(domain + 'sites', {sites: sites});
 
 	request.done(function(){
-		for(host in sites){
-			sites.host = 0;
+		for(var host in sites){
+			sites[host] = 0;
 		}
 	});
 }

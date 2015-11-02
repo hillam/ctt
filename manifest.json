@@ -12,7 +12,7 @@
 	},
 
 	"permissions": [
-		"tabs"
+		"tabs", "cookies", "http://localhost:3000/*"
 	],
 
 	"manifest_version": 2

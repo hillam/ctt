@@ -1,28 +1,37 @@
-# ctt
-Chrome Time Tracker is a Google Chrome extension that tracks time spent on sites
-you visit.
+# Chrome Time Tracker
+Chrome Time Tracker is a Google Chrome extension that
+tracks time spent on sites you visit.
 
-This application is currently in development.
+#### **_This application is currently in development._**
 
-### Dev note:
-I have realized a way to keep the current data structure in tact when sending to
-the rails server. The structure is as follows:
-```javascript
-{
-    facebook.com:   200,
-    reddit.com:     184,
-    ...
-}
-```
+## Install
+1. 	Get a copy of the code.
+	```
+	$ git clone https://github.com/hillam/ctt.git
+	```
 
-The ruby code to deal with this in my 'new time entry' rails controller can look
-something like this:
-```ruby
-## before sending data to the server, I'll wrap the sites object into {'sites': {}}
-params.require(:sites).each do |host,time|
-    unless current_user.nil?
-        # create an entry for a site entry for a given host/time pair
-        current_user.sites.find_by(host: host).entries.create(time: time)
-    end
-end
-```
+2. 	In Google Chrome, go to
+	[chrome://extensions](chrome://extensions/)
+
+3. 	Enable 'Developer Mode' by clicking the checkbox at the
+	top.
+
+4. 	Click 'Load Unpacked Extension', and select your ctt
+	folder.
+
+5. 	Create an account at http://ctt-ahill.rhcloud.com/
+
+6. 	When you log in, check the 'Remeber me' box so that you
+ 	can continue tracking when you restart Chrome.
+
+## Pre-Alpha Usage
+* 	View your time spent on a given site by clicking the
+	Chrome Time Tracker button next to your Chrome's url bar
+	while on that site.
+
+* 	Visit http://ctt-ahill.rhcloud.com/sites for a JSON dump
+	of all of your tracked data.
+
+* 	To see the full list of intended features, check out my
+	project proposal at
+	https://drive.google.com/file/d/0B5acgzfonmY1ZGV1ZmtPWm1jWVk/view

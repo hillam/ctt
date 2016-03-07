@@ -76,7 +76,7 @@ function push_sites(){
 	Pull current tracking data from the server.
 ------------------------------------------------------------------------------*/
 function pull_sites(){
-	var request = $.get(domain + 'sites');
+	var request = $.get(domain + 'sites.json');
 
 	request.done(function(data){
 		sites_total = data;

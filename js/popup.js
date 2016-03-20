@@ -1,9 +1,39 @@
 $(document).ready(function(){
+	$('body').on('click', 'a', function(){
+		chrome.tabs.create({url: $(this).attr('href')});
+		return false;
+	});
+
 	chrome.runtime.sendMessage({method: "get_current_tab"}, function(response){
-		$('#site').text(response.host);
-		$('#time').text(format_time(response.time));
+		render_popup(response);
 	});
 });
+
+function render_popup(data){
+	if(data.user.login){
+		$('#logged_out').hide();
+		$('#site').text(data.host);
+		$('#time').text(format_time(data.time));
+
+		var links = [
+			{
+				id: 'manage_notis',
+				url: 'https://ctt-ahill.rhcloud.com/users/' + data.user.id // + site_id
+			},
+			{
+				id: 'profile',
+				url: 'https://ctt-ahill.rhcloud.com/users/' + data.user.id
+			}
+		];
+		for(link of links){
+			$('#' + link.id).attr('href', link.url);
+		}
+	}
+	else{
+		$('#logged_in').hide();
+	}
+	wire_links(data);
+}
 
 // input: 	time in seconds
 // output:	"3.4 minutes", "3 weeks", "1 day", for example

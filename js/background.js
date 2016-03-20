@@ -6,11 +6,17 @@
 var sites = {};
 var sites_total = {};
 
+// simply determines whether to track and whether to ask the user to sign in
+var user = {
+	'login': false
+}
+
 // Holds the URL for the current tab.
 // Used to initialize the popup without having to do an extra tab query.
 var current_tab = null;
 
 setInterval(query_tabs, 1000);
+setInterval(check_login, 1000);
 
 // delay to make sure jquery is loaded before attempting
 setTimeout(pull_sites, 1000);
@@ -20,7 +26,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 	if(request.method == "get_current_tab"){
 		sendResponse({
 			host: current_tab,
-			time: (sites[current_tab] || 0) + (sites_total[current_tab] || 0)
+			time: (sites[current_tab] || 0) + (sites_total[current_tab] || 0),
+			user: user
 		});
 	}
 });
@@ -30,6 +37,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 	the time for that host.
 ------------------------------------------------------------------------------*/
 function query_tabs(){
+	if(!user.login){
+		return;
+	}
 	// QUERY ACTIVE TAB ON IN-FOCUS WINDOW
 	chrome.tabs.query({active: true, lastFocusedWindow: true}, function(tabs){
 		if(tabs[0]){
@@ -77,9 +87,7 @@ function push_sites(callback){
 
 	request.done(function(){
 		// reset times for all sites back to 0
-		for(var host in sites){
-			sites[host] = 0;
-		}
+		sites = {};
 		if(callback){
 			callback();
 		}
@@ -100,11 +108,14 @@ function pull_sites(){
 /*------------------------------------------------------------------------------
 	Get user info.
 ------------------------------------------------------------------------------*/
-function get_user(){
-	// TODO make route
-	var request = $.get(domain + 'user.json');
+function check_login(){
+	var request = $.get(domain + 'checklogin');
 
 	request.done(function(data){
-		// TODO do something
+		if(!user.login){
+			sites = {};
+			sites_total = {};
+		}
+		user = data;
 	});
 }

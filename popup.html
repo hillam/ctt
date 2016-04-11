@@ -16,11 +16,14 @@
 		</style>
 	</head>
 	<body>
-		<div id='logged_out'>
+		<div id='loading'>
+			<p align='center'><img src='assets/loading.gif'></p>
+		</div>
+		<div id='logged_out' hidden>
 			<h3>You are not logged into Time Tracker!</h3>
 			<p>If you're certain that you're logged in, try re-opening the popup.</p>
 		</div>
-		<div id='logged_in'>
+		<div id='logged_in' hidden>
 			<p id="site"></p>
 			<p id="time"></p>
 			<hr>

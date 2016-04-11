@@ -30,16 +30,25 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 		var search = $.grep(sites, function(e){ return e.hostname == current_tab; });
 		var site = search.length > 0 ? search[0] : {time: 0};
 
-		// TODO: don't ever sendResponse until site exists in the database
-		// (update_sites first)
+		if(site.hasOwnProperty('id')){
+			// site does not exist on the server yet, so update sites
+			send_response();
+		}
+		else{
+			//otherwise, send response
+			update_sites(send_response);
+		}
 
-		sendResponse({
-			id: site.id,
-			host: current_tab,
-			time: site.time + (timers[current_tab] || 0),
-			user: user
-		});
+		function send_response(){
+			sendResponse({
+				id: site.id,
+				host: current_tab,
+				time: site.time + (timers[current_tab] || 0),
+				user: user
+			});
+		};
 	}
+	return true;
 });
 
 /*------------------------------------------------------------------------------
@@ -81,9 +90,12 @@ var domain = "http://ctt-ahill.rhcloud.com/";
 /*------------------------------------------------------------------------------
 	Push sites BEFORE pulling sites. Setting intervals for each does not
 	guarantee that they maintain this order.
+	* callback - an optional action to be performed after the asynchronous events
 ------------------------------------------------------------------------------*/
-function update_sites(){
-	push_sites(pull_sites);
+function update_sites(callback){
+	push_sites(function(){
+		pull_sites(callback);
+	});
 }
 
 /*------------------------------------------------------------------------------
@@ -91,6 +103,7 @@ function update_sites(){
 	- 	this should not be called on it's own.. use update_sites so that you get
 		a fresh copy of sites_total from the server after pushing up temp sites
 		values
+	-	callback - an optional action to be performed after the asynchronous events
 ------------------------------------------------------------------------------*/
 function push_sites(callback){
 	var request = $.post(domain + 'sites', {sites: timers});
@@ -106,12 +119,16 @@ function push_sites(callback){
 
 /*------------------------------------------------------------------------------
 	Pull current tracking data from the server.
+	-	callback - an optional action to be performed after the asynchronous events
 ------------------------------------------------------------------------------*/
-function pull_sites(){
+function pull_sites(callback){
 	var request = $.get(domain + 'sites.json');
 
 	request.done(function(data){
 		sites = data;
+		if(callback){
+			callback();
+		}
 	});
 }
 

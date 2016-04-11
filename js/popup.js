@@ -27,7 +27,7 @@ $(document).ready(function(){
 
 function render_popup(data){
 	if(data.user.login){
-		$('#logged_out').hide();
+		$('#logged_in').show();
 		$('#site').text(data.host);
 		$('#time').text(format_time(data.time));
 
@@ -50,8 +50,9 @@ function render_popup(data){
 		$('#hostname').val(data.host);
 	}
 	else{
-		$('#logged_in').hide();
+		$('#logged_out').show();
 	}
+	$('#loading').hide();
 }
 
 // input: 	time in seconds

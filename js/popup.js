@@ -4,6 +4,22 @@ $(document).ready(function(){
 		return false;
 	});
 
+	$('form').submit(function(event){
+		var data = {
+            'hostname'	: $('input[name=hostname]').val(),
+            'time'		: $('input[name=time]').val(),
+            'span'		: $('select[name=span]').val()
+        };
+
+		$('input[type=submit]').prop("disabled",true);
+		var jqxhr = $.post("http://ctt-ahill.rhcloud.com/notifications", data);
+		jqxhr.always(function(){
+			$('input[name=submit]').prop("disabled", false);
+			$('input[name=time]').val('');
+		});
+		return false;
+	});
+
 	chrome.runtime.sendMessage({method: "get_current_tab"}, function(response){
 		render_popup(response);
 	});
@@ -18,21 +34,24 @@ function render_popup(data){
 		var links = [
 			{
 				id: 'manage_notis',
-				url: 'https://ctt-ahill.rhcloud.com/users/' + data.user.id // + site_id
+				url: 'https://ctt-ahill.rhcloud.com/users/' + data.user.id + "/sites/" + data.id
 			},
 			{
 				id: 'profile',
 				url: 'https://ctt-ahill.rhcloud.com/users/' + data.user.id
 			}
 		];
+
 		for(link of links){
 			$('#' + link.id).attr('href', link.url);
 		}
+
+		// set the hidden hostname attribute
+		$('#hostname').val(data.host);
 	}
 	else{
 		$('#logged_in').hide();
 	}
-	wire_links(data);
 }
 
 // input: 	time in seconds

@@ -1,10 +1,9 @@
 /*
-* sites: 		holds times (in sesconds) and get's dumped to the server and reset
-* 				to 0 every minute
-* sites_total: 	gets populated by the server upon pull_sites
+* sites: 	gets populated by the server upon pull_sites
+* timers:	temporary site timers. maps hostnames to times
 */
-var sites = {};
-var sites_total = {};
+var sites = [];
+var timers = {};
 
 // simply determines whether to track and whether to ask the user to sign in
 var user = {
@@ -22,11 +21,22 @@ setInterval(check_login, 1000);
 setTimeout(pull_sites, 1000);
 setInterval(update_sites, 60000);
 
+/*------------------------------------------------------------------------------
+	Respond to the popup with site data when it is opened.
+------------------------------------------------------------------------------*/
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 	if(request.method == "get_current_tab"){
+		// the site in `sites` with hostname matching the current tab
+		var search = $.grep(sites, function(e){ return e.hostname == current_tab; });
+		var site = search.length > 0 ? search[0] : {time: 0};
+
+		// TODO: don't ever sendResponse until site exists in the database
+		// (update_sites first)
+
 		sendResponse({
+			id: site.id,
 			host: current_tab,
-			time: (sites[current_tab] || 0) + (sites_total[current_tab] || 0),
+			time: site.time + (timers[current_tab] || 0),
 			user: user
 		});
 	}
@@ -58,9 +68,9 @@ function query_tabs(){
 }
 
 function increment(host){
-	if(!sites[host])
-		sites[host] = 0;
-	sites[host]++;
+	if(!timers[host])
+		timers[host] = 0;
+	timers[host]++;
 }
 
 /*------------------------------------------------------------------------------
@@ -83,11 +93,11 @@ function update_sites(){
 		values
 ------------------------------------------------------------------------------*/
 function push_sites(callback){
-	var request = $.post(domain + 'sites', {sites: sites});
+	var request = $.post(domain + 'sites', {sites: timers});
 
 	request.done(function(){
 		// reset times for all sites back to 0
-		sites = {};
+		timers = {};
 		if(callback){
 			callback();
 		}
@@ -101,7 +111,7 @@ function pull_sites(){
 	var request = $.get(domain + 'sites.json');
 
 	request.done(function(data){
-		sites_total = data;
+		sites = data;
 	});
 }
 
@@ -113,8 +123,8 @@ function check_login(){
 
 	request.done(function(data){
 		if(!user.login){
-			sites = {};
-			sites_total = {};
+			timers = {};
+			sites = [];
 		}
 		user = data;
 	});

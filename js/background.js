@@ -30,7 +30,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 		var search = $.grep(sites, function(e){ return e.hostname == current_tab; });
 		var site = search.length > 0 ? search[0] : {time: 0};
 
-		if(site.hasOwnProperty('id')){
+		if(site.hasOwnProperty('id') || user.login == false){
 			// site does not exist on the server yet, so update sites
 			send_response();
 		}

@@ -62,10 +62,10 @@ function query_tabs(){
 	// QUERY ACTIVE TAB ON IN-FOCUS WINDOW
 	chrome.tabs.query({active: true, lastFocusedWindow: true}, function(tabs){
 		if(tabs[0]){
-			// PARSE SITE HOSTNAME FROM URL
-			var url = purl(tabs[0].url);
-			var host = url.attr('host');
-			var protocol = url.attr('protocol');
+			// Parse site hostname from url using URI.js
+			var url = new URI(tabs[0].url);
+			var host = url.hostname();
+			var protocol = url.protocol();
 
 			// IF HTTP OR HTTPS,
 			if(protocol == 'http' || protocol == 'https'){

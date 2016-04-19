@@ -24,4 +24,4 @@ tracks time spent on sites you visit.
 6. 	When you log in, check the 'Remeber me' box so that you
  	can continue tracking when you restart Chrome.
 
-7. 	Use the popup provided by the extension to see the time
+7. 	Start tracking!

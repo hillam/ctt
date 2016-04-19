@@ -25,3 +25,8 @@ tracks time spent on sites you visit.
  	can continue tracking when you restart Chrome.
 
 7. 	Start tracking!
+
+## Official Release
+Coming soon!
+
+Check back here to see when the app has been added to the [Chrome Web Store](https://chrome.google.com/webstore). 
